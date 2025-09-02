@@ -1,0 +1,37 @@
+config.h
+*.csv
+
+# Don't commit binaries
+*.asm
+*.exe
+*.out
+*.o
+
+# Exclude temporary folders
+build/
+build*/
+export/
+cache/
+.vagrant/
+
+# IDE
+.vs/
+.vscode/
+.cache/
+.venv
+# Kdevelop
+.kdev4/
+*.kdev4
+# vim
+compile_commands.json
+*.swp
+*.user
+
+# Exclude runtime log and data folders
+logs/
+data/
+
+# MuJoCo
+MUJOCO_LOG.TXT
+MJDATA.TXT
+MJMODEL.TXT

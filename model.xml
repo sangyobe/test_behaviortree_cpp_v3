@@ -1,0 +1,24 @@
+<root BTCPP_format="4">
+    <TreeNodesModel>
+        <Action ID="IsDoorOpen"/>
+        <Action ID="OpenDoor"/>
+        <Action ID="CloseDoor"/>
+        <Action ID="SwitchHands"/>
+        <Action ID="GraspObject">
+            <input_port name="hand"/>
+            <input_port name="object"/>
+        </Action>
+        <Action ID="ThrowObject">
+            <input_port name="hand"/>
+        </Action>
+        <Action ID="IsObjectAtHand">
+            <input_port name="hand"/>
+        </Action>
+        <Action ID="MoveTo">
+            <input_port name="poi"/>
+        </Action>
+        <Action ID="Motion">
+            <input_port name="motion"/>
+        </Action>
+    </TreeNodesModel>
+</root>

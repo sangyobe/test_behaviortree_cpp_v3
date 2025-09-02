@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root BTCPP_format="4">
+  <BehaviorTree ID="Demo">
+    <AsyncSequence>
+      <MoveTo poi="site"/>
+      <Motion motion="opening"/>
+      <SubTree ID="PickAndThrow"/>
+      <MoveTo poi="site"/>
+    </AsyncSequence>
+  </BehaviorTree>
+
+  <BehaviorTree ID="DoorOpened">
+    <AsyncFallback name="Door Opened">
+      <IsDoorOpen/>
+      <RetryUntilSuccessful num_attempts="1">
+        <OpenDoor/>
+      </RetryUntilSuccessful>
+    </AsyncFallback>
+  </BehaviorTree>
+
+  <BehaviorTree ID="GraspObjects">
+    <AsyncSequence name="Grasp Objects">
+      <ForceSuccess>
+        <GraspObject hand="left"
+                     object="letsbe"/>
+      </ForceSuccess>
+      <ForceSuccess>
+        <GraspObject hand="right"
+                     object="welchis"/>
+      </ForceSuccess>
+    </AsyncSequence>
+  </BehaviorTree>
+
+  <BehaviorTree ID="PickAndThrow">
+    <Sequence name="Pick &amp; Throw">
+      <MoveTo poi="door"/>
+      <SubTree ID="DoorOpened"/>
+      <MoveTo poi="table"/>
+      <SubTree ID="GraspObjects"/>
+      <MoveTo poi="throw"/>
+      <SubTree ID="ThrowObjects"/>
+    </Sequence>
+  </BehaviorTree>
+
+  <BehaviorTree ID="ThrowObjects">
+    <AsyncSequence name="Throw Objects">
+      <SwitchHands/>
+      <AsyncFallback>
+        <Inverter>
+          <IsObjectAtHand hand="right"/>
+        </Inverter>
+        <ThrowObject hand="right"/>
+      </AsyncFallback>
+      <AsyncFallback>
+        <Inverter>
+          <IsObjectAtHand hand="left"/>
+        </Inverter>
+        <ThrowObject hand="left"/>
+      </AsyncFallback>
+    </AsyncSequence>
+  </BehaviorTree>
+
+  <!-- Description of Node Models (used by Groot) -->
+  <TreeNodesModel>
+    <Action ID="GraspObject">
+      <input_port name="hand"/>
+      <input_port name="object"/>
+    </Action>
+    <Action ID="IsDoorOpen"/>
+    <Action ID="IsObjectAtHand">
+      <input_port name="hand"/>
+    </Action>
+    <Action ID="Motion">
+      <input_port name="motion"/>
+    </Action>
+    <Action ID="MoveTo">
+      <input_port name="poi"/>
+    </Action>
+    <Action ID="OpenDoor"/>
+    <Action ID="SwitchHands"/>
+    <Action ID="ThrowObject">
+      <input_port name="hand"/>
+    </Action>
+  </TreeNodesModel>
+
+</root>
