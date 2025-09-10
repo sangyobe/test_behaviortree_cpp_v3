@@ -1,72 +1,35 @@
 #include <iostream>
 #include <behaviortree_cpp_v3/behavior_tree.h>
 #include <behaviortree_cpp_v3/bt_factory.h>
-
-// Simple function that return a NodeStatus
-BT::NodeStatus CheckBattery()
-{
-  std::cout << "[ Battery: OK ]" << std::endl;
-  return BT::NodeStatus::SUCCESS;
-}
-
-// We want to wrap into an ActionNode the methods open() and close()
-class GripperInterface
-{
-public:
-  GripperInterface(): _open(true) {}
-    
-  BT::NodeStatus open() 
-  {
-    _open = true;
-    std::cout << "GripperInterface::open" << std::endl;
-    return BT::NodeStatus::SUCCESS;
-  }
-
-  BT::NodeStatus close() 
-  {
-    std::cout << "GripperInterface::close" << std::endl;
-    _open = false;
-    return BT::NodeStatus::SUCCESS;
-  }
-
-private:
-  bool _open; // shared information
-};
-
-// without ports.
-class ApproachObject : public BT::SyncActionNode
-{
-public:
-  ApproachObject(const std::string& name) :
-      BT::SyncActionNode(name, {})
-  {}
-
-  // You must override the virtual function tick()
-  BT::NodeStatus tick() override
-  {
-    std::cout << "ApproachObject: " << this->name() << std::endl;
-    return BT::NodeStatus::SUCCESS;
-  }
-};
+#include "moveTo.h"
+#include "graspObject.h"
+#include "openDoor.h"
+#include "switchHands.h"
+#include "throwObject.h"
+#include "isDoorOpen.h"
+#include "isObjectAtHand.h"
+#include "simpleMotion.h"
+#include <string>
+#include <sstream>
 
 int main()
 {
     BT::BehaviorTreeFactory factory;
 
-    // factory.registerNodeType<GripperInterface>("GripperInterface");
-    factory.registerNodeType<ApproachObject>("ApproachObject");
+    factory.registerNodeType<MoveToAction>("MoveTo");
+    factory.registerNodeType<GraspObjectAction>("GraspObject");
+    factory.registerNodeType<OpenDoorAction>("OpenDoor");
+    factory.registerNodeType<SwitchHandsAction>("SwitchHands");
+    factory.registerNodeType<ThrowObjectAction>("ThrowObject");
+    factory.registerNodeType<SimpleMotionAction>("Motion");
+    factory.registerNodeType<IsDoorOpenAction>("IsDoorOpen");
+    factory.registerNodeType<IsObjectAtHandAction>("IsObjectAtHand");
 
-    factory.registerSimpleCondition("CheckBattery", [&](BT::TreeNode&) { return CheckBattery(); });
 
-    GripperInterface gripper;
-    factory.registerSimpleAction("OpenGripper", [&](BT::TreeNode&) { return gripper.open(); });
-    factory.registerSimpleAction("CloseGripper", [&](BT::TreeNode&) { return gripper.close(); });
-
-
-    auto tree = factory.createTreeFromFile("./btree.xml");
+    factory.registerBehaviorTreeFromFile("./PonyKA.xml");
+    auto tree = factory.createTree("Demo");
+    BT::printTreeRecursively(tree.rootNode());
     tree.tickRootWhileRunning();
-
-  
 
     return 0;
 }

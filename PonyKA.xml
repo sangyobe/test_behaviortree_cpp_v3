@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <root BTCPP_format="4">
   <BehaviorTree ID="Demo">
-    <AsyncSequence>
+    <Sequence>
       <MoveTo poi="site"/>
       <Motion motion="opening"/>
       <SubTree ID="PickAndThrow"/>
       <MoveTo poi="site"/>
-    </AsyncSequence>
+    </Sequence>
   </BehaviorTree>
 
   <BehaviorTree ID="DoorOpened">
-    <AsyncFallback name="Door Opened">
+    <Fallback name="Door Opened">
       <IsDoorOpen/>
       <RetryUntilSuccessful num_attempts="1">
         <OpenDoor/>
       </RetryUntilSuccessful>
-    </AsyncFallback>
+    </Fallback>
   </BehaviorTree>
 
   <BehaviorTree ID="GraspObjects">
-    <AsyncSequence name="Grasp Objects">
+    <Sequence name="Grasp Objects">
       <ForceSuccess>
         <GraspObject hand="left"
                      object="letsbe"/>
@@ -28,7 +28,7 @@
         <GraspObject hand="right"
                      object="welchis"/>
       </ForceSuccess>
-    </AsyncSequence>
+    </Sequence>
   </BehaviorTree>
 
   <BehaviorTree ID="PickAndThrow">
@@ -43,21 +43,21 @@
   </BehaviorTree>
 
   <BehaviorTree ID="ThrowObjects">
-    <AsyncSequence name="Throw Objects">
+    <Sequence name="Throw Objects">
       <SwitchHands/>
-      <AsyncFallback>
+      <Fallback>
         <Inverter>
           <IsObjectAtHand hand="right"/>
         </Inverter>
         <ThrowObject hand="right"/>
-      </AsyncFallback>
-      <AsyncFallback>
+      </Fallback>
+      <Fallback>
         <Inverter>
           <IsObjectAtHand hand="left"/>
         </Inverter>
         <ThrowObject hand="left"/>
-      </AsyncFallback>
-    </AsyncSequence>
+      </Fallback>
+    </Sequence>
   </BehaviorTree>
 
   <!-- Description of Node Models (used by Groot) -->
